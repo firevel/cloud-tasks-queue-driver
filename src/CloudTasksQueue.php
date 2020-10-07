@@ -4,15 +4,9 @@ namespace Firevel\CloudTasksQueueDriver;
 
 use Firevel\CloudTasksQueueDriver\Services\CloudTasksService;
 use Google\Cloud\Tasks\V2\CloudTasksClient;
-use Google\Cloud\Tasks\V2\HttpMethod;
-use Google\Cloud\Tasks\V2\HttpRequest;
-use Google\Cloud\Tasks\V2\OidcToken;
-use Google\Cloud\Tasks\V2\Task;
-use Google\Protobuf\Timestamp;
 use Illuminate\Contracts\Queue\Queue as QueueContract;
 use Illuminate\Queue\Queue as LaravelQueue;
 use Illuminate\Support\InteractsWithTime;
-use Illuminate\Support\Str;
 
 class CloudTasksQueue extends LaravelQueue implements QueueContract
 {
@@ -130,7 +124,7 @@ class CloudTasksQueue extends LaravelQueue implements QueueContract
     /**
      * Get queue name.
      *
-     * @param string $queue 
+     * @param string $queue
      * @return string
      */
     private function getQueue($queue = null)

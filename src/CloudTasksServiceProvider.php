@@ -2,7 +2,6 @@
 
 namespace Firevel\CloudTasksQueueDriver;
 
-use Firevel\CloudTasksQueueDriver\CloudTasksConnector;
 use Firevel\CloudTasksQueueDriver\Http\Controllers\CloudTasksController;
 use Google\Cloud\Tasks\V2\CloudTasksClient;
 use Illuminate\Queue\QueueManager;

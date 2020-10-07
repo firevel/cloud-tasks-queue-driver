@@ -3,8 +3,8 @@
 namespace Firevel\CloudTasksQueueDriver;
 
 use Illuminate\Container\Container;
-use Illuminate\Queue\Jobs\Job;
 use Illuminate\Contracts\Queue\Job as JobContract;
+use Illuminate\Queue\Jobs\Job;
 
 class CloudTasksJob extends Job implements JobContract
 {

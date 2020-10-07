@@ -2,7 +2,6 @@
 
 namespace Firevel\CloudTasksQueueDriver;
 
-use Google\Cloud\Tasks\V2\CloudTasksClient;
 use Illuminate\Queue\Connectors\ConnectorInterface;
 
 class CloudTasksConnector implements ConnectorInterface

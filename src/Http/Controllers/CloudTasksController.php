@@ -4,25 +4,24 @@ namespace Firevel\CloudTasksQueueDriver\Http\Controllers;
 
 use Firevel\CloudTasksQueueDriver\Http\Requests\CloudTasksRequest;
 use Firevel\CloudTasksQueueDriver\Services\CloudTasksService;
-use Illuminate\Http\Request;
 use Illuminate\Queue\WorkerOptions;
 use Illuminate\Routing\Controller;
 
 class CloudTasksController extends Controller
 {
-	/**
-	 * Handle job.
-	 *
-	 * @param CloudTasksRequest $request
-	 * @return void
-	 */
+    /**
+     * Handle job.
+     *
+     * @param CloudTasksRequest $request
+     * @return void
+     */
     public function handle(CloudTasksRequest $request)
     {
-    	$job = CloudTasksService::makeJobFromRequest($request);
+        $job = CloudTasksService::makeJobFromRequest($request);
 
-    	$this
-    		->getWorker()
-    		->process('cloudtasks', $job, new WorkerOptions());
+        $this
+            ->getWorker()
+            ->process('cloudtasks', $job, new WorkerOptions());
     }
 
     /**
@@ -32,6 +31,6 @@ class CloudTasksController extends Controller
      */
     public function getWorker()
     {
-    	return app('queue.worker');
+        return app('queue.worker');
     }
 }

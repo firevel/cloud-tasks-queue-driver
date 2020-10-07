@@ -4,7 +4,6 @@ namespace Firevel\CloudTasksQueueDriver\Services;
 
 use Firevel\CloudTasksQueueDriver\CloudTasksJob;
 use Firevel\CloudTasksQueueDriver\Http\Requests\CloudTasksRequest;
-use Firevel\CloudTasksQueueDriver\Services\SignatureService;
 use Google\Cloud\Tasks\V2\AppEngineHttpRequest;
 use Google\Cloud\Tasks\V2\CloudTasksClient;
 use Google\Cloud\Tasks\V2\HttpMethod;
@@ -141,7 +140,7 @@ class CloudTasksService
     /**
      * Get config.
      *
-     * @param string $key 
+     * @param string $key
      * @return array|null
      */
     protected function getConfig($key = null)
