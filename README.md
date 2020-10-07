@@ -1,8 +1,8 @@
 # Cloud Tasks queue driver
 
-Cloud Tasks queue driver for Laravel apps running inside Google App Engine.
+Cloud Tasks queue driver for Laravel apps running inside Google App Engine. Driver is compatible with Firevel and Laravel.
 
-## Configuration.
+## Configuration
 
 Add to your `config/queue.php`:
 ```
@@ -16,3 +16,19 @@ Add to your `config/queue.php`:
 ```
 
 Set `QUEUE_CONNECTION` to `cloudtasks`, and update `CLOUD_TASKS_LOCATION` in your `.env` file.
+
+## Cloud Tasks setup
+
+Create queue using `queue.yaml` or `gcloud` ([read more](https://cloud.google.com/tasks/docs/queue-yaml)).
+
+Example `queue.yaml`:
+```
+queue:
+- name: default
+  rate: 500/s
+```
+
+Example `gcloud` command:
+```
+gcloud tasks queues create default
+```
