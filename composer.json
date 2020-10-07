@@ -15,5 +15,12 @@
             "Firevel\\CloudTasksQueueDriver\\": "src/"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Firevel\\CloudTasksQueueDriver\\CloudTasksServiceProvider"
+            ]
+        }
+    },
     "require": {}
 }
