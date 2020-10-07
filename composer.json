@@ -1,0 +1,19 @@
+{
+    "name": "firevel/cloud-tasks-queue-driver",
+    "description": "Cloud Tasks queue driver for Laravel apps running inside Google App Engine.",
+    "keywords": ["laravel", "firevel", "cloud tasks", "queue"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michael Slowik",
+            "email": "michael.slowik@firevel.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Firevel\\CloudTasksQueueDriver\\": "src/"
+        }
+    },
+    "require": {}
+}
