@@ -23,5 +23,7 @@
         }
     },
     "minimum-stability": "dev",
-    "require": {}
+    "require": {
+        "google/cloud-tasks": "^1.8"        
+    }
 }
