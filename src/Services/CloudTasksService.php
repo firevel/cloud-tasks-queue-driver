@@ -5,6 +5,7 @@ namespace Firevel\CloudTasksQueueDriver\Services;
 use Firevel\CloudTasksQueueDriver\CloudTasksJob;
 use Firevel\CloudTasksQueueDriver\Http\Requests\CloudTasksRequest;
 use Google\Cloud\Tasks\V2\AppEngineHttpRequest;
+use Google\Cloud\Tasks\V2\AppEngineRouting;
 use Google\Cloud\Tasks\V2\CloudTasksClient;
 use Google\Cloud\Tasks\V2\HttpMethod;
 use Google\Cloud\Tasks\V2\Task;
