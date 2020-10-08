@@ -32,3 +32,7 @@ Example `gcloud` command:
 ```
 gcloud tasks queues create default
 ```
+
+## Routing
+
+Routing by default matching service and version, so your task will always match version it was dispatched from.
