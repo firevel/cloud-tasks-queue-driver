@@ -107,6 +107,18 @@ class CloudTasksService
         $httpRequest->setBody($payload);
         $httpRequest->setHeaders(['x-signature' => SignatureService::sign($payload)]);
 
+        $routing = new AppEngineRouting();
+
+        if ($service = config('app.service') ?? env('GAE_SERVICE')) {
+            $routing->setService($service);
+        }
+
+        if (env('GAE_VERSION')) {
+            $routing->setVersion(env('GAE_VERSION'));
+        }
+
+        $httpRequest->setAppEngineRouting($routing);
+
         return $httpRequest;
     }
 
