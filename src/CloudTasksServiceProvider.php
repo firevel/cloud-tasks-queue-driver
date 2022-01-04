@@ -52,7 +52,7 @@ class CloudTasksServiceProvider extends ServiceProvider
     private function registerRoutes(Router $router)
     {
         $connector = config('queue.default');
-        $route = config("queue.connections.{$connector}.route");
+        $route = config("queue.connections.{$connector}.route", config("queue.connections.cloudtasks.route"));
         $router->post($route, [CloudTasksController::class, 'handle']);
     }
 }
