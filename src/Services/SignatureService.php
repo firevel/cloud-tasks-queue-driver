@@ -12,7 +12,7 @@ class SignatureService
     /**
      * Generate hmac signature.
      *
-     * @param object|array $data
+     * @param  object|array  $data
      * @return string
      */
     public static function sign($data)
@@ -31,8 +31,8 @@ class SignatureService
     /**
      * Verify if data match signature.
      *
-     * @param object|array|string $data
-     * @param string $signature
+     * @param  object|array|string  $data
+     * @param  string  $signature
      * @return bool
      */
     public static function verify($data, $signature)

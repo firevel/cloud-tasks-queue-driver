@@ -12,7 +12,7 @@ class CloudTasksController extends Controller
     /**
      * Handle job.
      *
-     * @param CloudTasksRequest $request
+     * @param  CloudTasksRequest  $request
      * @return void
      */
     public function handle(CloudTasksRequest $request)

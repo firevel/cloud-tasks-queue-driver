@@ -23,8 +23,7 @@ class CloudTasksJob extends Job implements JobContract
     private $headers;
 
     /**
-     * @param Container $container
-     *
+     * @param  Container  $container
      * @return void
      */
     public function __construct(Container $container)
@@ -55,8 +54,7 @@ class CloudTasksJob extends Job implements JobContract
     /**
      * Set job array.
      *
-     * @param array $job
-     *
+     * @param  array  $job
      * @return self
      */
     public function setJob($job)
@@ -75,8 +73,7 @@ class CloudTasksJob extends Job implements JobContract
     }
 
     /**
-     * @param array $headers
-     *
+     * @param  array  $headers
      * @return self
      */
     public function setHeaders(array $headers)
@@ -89,8 +86,8 @@ class CloudTasksJob extends Job implements JobContract
     /**
      * Get header by name.
      *
-     * @param string $name
-     * @param mixed $default
+     * @param  string  $name
+     * @param  mixed  $default
      * @return string
      */
     public function header($name, $default = null)
