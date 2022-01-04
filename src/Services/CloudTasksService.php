@@ -38,8 +38,7 @@ class CloudTasksService
     /**
      * Constructor.
      *
-     * @param array $config
-     *
+     * @param  array  $config
      * @return void
      */
     public function __construct(array $config)
@@ -126,11 +125,10 @@ class CloudTasksService
     /**
      * Push task to queue.
      *
-     * @param string $queue Queue name.
-     * @param string $payload
-     * @param int $delay
-     * @param int $attempts
-     *
+     * @param  string  $queue  Queue name.
+     * @param  string  $payload
+     * @param  int  $delay
+     * @param  int  $attempts
      * @return bool
      */
     public function pushTaskToQueue($queue, $payload, $delay = 0, $attempts = 0)
@@ -153,7 +151,7 @@ class CloudTasksService
     /**
      * Get config.
      *
-     * @param string $key
+     * @param  string  $key
      * @return array|null
      */
     protected function getConfig($key = null)

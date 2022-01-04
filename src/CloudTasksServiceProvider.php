@@ -13,8 +13,8 @@ class CloudTasksServiceProvider extends ServiceProvider
     /**
      * Boot service provider.
      *
-     * @param QueueManager $queue
-     * @param Router $router
+     * @param  QueueManager  $queue
+     * @param  Router  $router
      * @return void
      */
     public function boot(QueueManager $queue, Router $router)
@@ -39,7 +39,7 @@ class CloudTasksServiceProvider extends ServiceProvider
     /**
      * Register connector.
      *
-     * @param QueueManager $queue
+     * @param  QueueManager  $queue
      * @return void
      */
     private function registerCloudTasksConnector(QueueManager $queue)
@@ -52,7 +52,7 @@ class CloudTasksServiceProvider extends ServiceProvider
     private function registerRoutes(Router $router)
     {
         $connector = config('queue.default');
-        $route = config("queue.connections.{$connector}.route", config("queue.connections.cloudtasks.route"));
+        $route = config("queue.connections.{$connector}.route", config('queue.connections.cloudtasks.route'));
         $router->post($route, [CloudTasksController::class, 'handle']);
     }
 }
