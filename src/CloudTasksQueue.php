@@ -109,8 +109,8 @@ class CloudTasksQueue extends LaravelQueue implements QueueContract
      */
     public function later($delay, $job, $data = '', $queue = null)
     {
-        return $this->pushToCloudTasks(
-            $queue,
+        return $this->getTasksService()->pushTaskToQueue(
+            $this->getQueue($queue),
             $this->createPayload($job, $this->getQueue($queue), $data),
             $delay
         );
