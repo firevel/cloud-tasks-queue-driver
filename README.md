@@ -1,6 +1,6 @@
 # Cloud Tasks queue driver
 
-Cloud Tasks queue driver for Laravel apps running inside Google App Engine. Driver is compatible with Firevel and Laravel.
+Cloud Tasks queue driver for Laravel apps running inside Google App Engine or Google Cloud Run. Driver is compatible with Firevel and Laravel.
 
 ## Configuration
 
@@ -35,4 +35,4 @@ gcloud tasks queues create default
 
 ## Routing
 
-Routing by default matching service and version, so your task will always match version it was dispatched from.
+Inside App Engine routing matching service and version, so your task will always match version it was dispatched from. Inside Cloud Run it will always be handled by promoted version.
