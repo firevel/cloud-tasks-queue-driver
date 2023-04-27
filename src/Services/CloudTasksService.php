@@ -8,6 +8,7 @@ use Google\Cloud\Tasks\V2\AppEngineHttpRequest;
 use Google\Cloud\Tasks\V2\AppEngineRouting;
 use Google\Cloud\Tasks\V2\CloudTasksClient;
 use Google\Cloud\Tasks\V2\HttpMethod;
+use Google\Cloud\Tasks\V2\HttpRequest;
 use Google\Cloud\Tasks\V2\Task;
 use Google\Protobuf\Timestamp;
 use Illuminate\Support\InteractsWithTime;
@@ -95,9 +96,9 @@ class CloudTasksService
     }
 
     /**
-     * Create http request used in task.
+     * Create App Engine http request used in task.
      *
-     * @return type
+     * @return AppEngineHttpRequest
      */
     public function createAppEngineHttpRequest($route, $payload, $method = null)
     {
@@ -123,6 +124,22 @@ class CloudTasksService
     }
 
     /**
+     * Create http request used in task.
+     *
+     * @return HttpRequest
+     */
+    public function createHttpRequest($route, $payload, $method = null)
+    {
+        $httpRequest = new HttpRequest();
+        $httpRequest->setUrl('https://'.$_SERVER['HTTP_HOST'].$route);
+        $httpRequest->setHttpMethod($method ?? HttpMethod::POST);
+        $httpRequest->setBody($payload);
+        $httpRequest->setHeaders(['x-signature' => SignatureService::sign($payload)]);
+
+        return $httpRequest;
+    }
+
+    /**
      * Push task to queue.
      *
      * @param  string  $queue  Queue name.
@@ -136,9 +153,17 @@ class CloudTasksService
         $queueName = $this->getClient()->queueName($this->getConfig('project'), $this->getConfig('location'), $queue);
 
         $task = app(Task::class);
-        $task->setAppEngineHttpRequest(
-            $this->createAppEngineHttpRequest($this->getConfig('route'), $payload)
-        );
+
+        // Google App Engine.
+        if (env('GAE_SERVICE')) {
+            $task->setAppEngineHttpRequest(
+                $this->createAppEngineHttpRequest($this->getConfig('route'), $payload)
+            );
+        } else {
+            $task->setHttpRequest(
+                $this->createHttpRequest($this->getConfig('route'), $payload)
+            );
+        }
 
         $availableAt = $this->availableAt($delay);
         if ($availableAt > time()) {
