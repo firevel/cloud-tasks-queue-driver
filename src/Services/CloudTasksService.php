@@ -131,7 +131,7 @@ class CloudTasksService
     public function createHttpRequest($route, $payload, $method = null)
     {
         $httpRequest = new HttpRequest();
-        $httpRequest->setUrl('https://' . $_SERVER['HTTP_HOST'] . $route);
+        $httpRequest->setUrl('https://'.$_SERVER['HTTP_HOST'].$route);
         $httpRequest->setHttpMethod($method ?? HttpMethod::POST);
         $httpRequest->setBody($payload);
         $httpRequest->setHeaders(['x-signature' => SignatureService::sign($payload)]);
