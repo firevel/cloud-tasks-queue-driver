@@ -131,7 +131,7 @@ class CloudTasksService
     public function createHttpRequest($url, $route, $payload, $method = null)
     {
         $httpRequest = new HttpRequest();
-        $httpRequest->setUrl($url . $route);
+        $httpRequest->setUrl($url.$route);
         $httpRequest->setHttpMethod($method ?? HttpMethod::POST);
         $httpRequest->setBody($payload);
         $httpRequest->setHeaders(['x-signature' => SignatureService::sign($payload)]);
@@ -160,7 +160,7 @@ class CloudTasksService
                 $this->createAppEngineHttpRequest($this->getConfig('route'), $payload)
             );
         } else {
-            $url = $this->getConfig('url') ?? 'https://' . $_SERVER['HTTP_HOST'];
+            $url = $this->getConfig('url') ?? 'https://'.$_SERVER['HTTP_HOST'];
             $task->setHttpRequest(
                 $this->createHttpRequest($url, $this->getConfig('route'), $payload)
             );
