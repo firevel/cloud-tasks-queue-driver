@@ -17,6 +17,8 @@ Add to your `config/queue.php`:
 
 Set `QUEUE_CONNECTION` to `cloudtasks`, and update `CLOUD_TASKS_LOCATION` in your `.env` file.
 
+If you use a proxy or load balancer that overrides URLs you can set `url` in the queue config.
+
 ## Cloud Tasks setup
 
 Create queue using `queue.yaml` or `gcloud` ([read more](https://cloud.google.com/tasks/docs/queue-yaml)).
