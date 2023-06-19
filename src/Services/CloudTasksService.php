@@ -192,6 +192,10 @@ class CloudTasksService
             return $this->config;
         }
 
+        if (empty($this->config[$key])) {
+            return null;
+        }
+
         return $this->config[$key];
     }
 }
