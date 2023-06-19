@@ -110,7 +110,7 @@ class CloudTasksService
 
         $routing = new AppEngineRouting();
 
-        if (!empty($service)) {
+        if (! empty($service)) {
             $routing->setService($service);
         }
 
