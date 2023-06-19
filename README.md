@@ -8,6 +8,7 @@ Add to your `config/queue.php`:
 ```
         'cloudtasks' => [
             'driver' => 'cloudtasks',
+            'service' => env('GAE_SERVICE'),
             'route' => env('CLOUD_TASKS_ROUTE', '/_cloudtasks'),
             'project' => env('GOOGLE_CLOUD_PROJECT'),
             'location' => env('CLOUD_TASKS_LOCATION', 'us-central1'), // Location must match your App Engine project location.

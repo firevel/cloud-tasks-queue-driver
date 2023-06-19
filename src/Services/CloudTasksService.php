@@ -100,7 +100,7 @@ class CloudTasksService
      *
      * @return AppEngineHttpRequest
      */
-    public function createAppEngineHttpRequest($route, $payload, $method = null)
+    public function createAppEngineHttpRequest($service, $route, $payload, $method = null)
     {
         $httpRequest = new AppEngineHttpRequest();
         $httpRequest->setRelativeUri($route);
@@ -110,7 +110,7 @@ class CloudTasksService
 
         $routing = new AppEngineRouting();
 
-        if ($service = config('app.service') ?? env('GAE_SERVICE')) {
+        if (!empty($service)) {
             $routing->setService($service);
         }
 
@@ -151,13 +151,14 @@ class CloudTasksService
     public function pushTaskToQueue($queue, $payload, $delay = 0, $attempts = 0)
     {
         $queueName = $this->getClient()->queueName($this->getConfig('project'), $this->getConfig('location'), $queue);
+        $service = $this->getConfig('service') ?? env('GAE_SERVICE');
 
         $task = app(Task::class);
 
         // Google App Engine.
-        if (env('GAE_SERVICE')) {
+        if ($service) {
             $task->setAppEngineHttpRequest(
-                $this->createAppEngineHttpRequest($this->getConfig('route'), $payload)
+                $this->createAppEngineHttpRequest($service, $this->getConfig('route'), $payload)
             );
         } else {
             $url = $this->getConfig('url') ?? 'https://'.$_SERVER['HTTP_HOST'];
