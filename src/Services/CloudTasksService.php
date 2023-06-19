@@ -100,7 +100,7 @@ class CloudTasksService
      *
      * @return AppEngineHttpRequest
      */
-    public function createAppEngineHttpRequest($service, $route, $payload, $method = null)
+    public function createAppEngineHttpRequest($service, $version, $route, $payload, $method = null)
     {
         $httpRequest = new AppEngineHttpRequest();
         $httpRequest->setRelativeUri($route);
@@ -114,8 +114,8 @@ class CloudTasksService
             $routing->setService($service);
         }
 
-        if (env('GAE_VERSION')) {
-            $routing->setVersion(env('GAE_VERSION'));
+        if (! empty($version)) {
+            $routing->setVersion($version);
         }
 
         $httpRequest->setAppEngineRouting($routing);
@@ -158,7 +158,12 @@ class CloudTasksService
         // Google App Engine.
         if ($service) {
             $task->setAppEngineHttpRequest(
-                $this->createAppEngineHttpRequest($service, $this->getConfig('route'), $payload)
+                $this->createAppEngineHttpRequest(
+                    $service,
+                    $this->getConfig('version'),
+                    $this->getConfig('route'),
+                    $payload
+                )
             );
         } else {
             $url = $this->getConfig('url') ?? 'https://'.$_SERVER['HTTP_HOST'];
