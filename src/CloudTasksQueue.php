@@ -24,7 +24,7 @@ class CloudTasksQueue extends LaravelQueue implements QueueContract
      *
      * @var array
      */
-    private $config;
+    private $serviceConfig;
 
     /**
      * @var CloudTasksService
@@ -34,14 +34,14 @@ class CloudTasksQueue extends LaravelQueue implements QueueContract
     /**
      * Constructor.
      *
-     * @param  array  $config
+     * @param  array  $serviceConfig
      * @param  CloudTasksClient  $client
      * @return void
      */
-    public function __construct(array $config)
+    public function __construct(array $serviceConfig)
     {
-        $this->config = $config;
-        $this->default = $config['queue_name'];
+        $this->serviceConfig = $serviceConfig;
+        $this->default = $serviceConfig['queue_name'];
     }
 
     /**
@@ -52,7 +52,7 @@ class CloudTasksQueue extends LaravelQueue implements QueueContract
     public function getTasksService()
     {
         if (empty($this->tasksService)) {
-            $this->tasksService = new CloudTasksService($this->getConfig());
+            $this->tasksService = new CloudTasksService($this->getServiceConfig());
         }
 
         return $this->tasksService;
@@ -137,8 +137,8 @@ class CloudTasksQueue extends LaravelQueue implements QueueContract
      *
      * @return array
      */
-    public function getConfig()
+    public function getServiceConfig()
     {
-        return $this->config;
+        return $this->serviceConfig;
     }
 }
