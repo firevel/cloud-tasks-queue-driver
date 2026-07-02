@@ -15,6 +15,11 @@
             "Firevel\\CloudTasksQueueDriver\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Firevel\\CloudTasksQueueDriver\\Tests\\": "tests/"
+        }
+    },
     "extra": {
         "laravel": {
             "providers": [
@@ -23,7 +28,15 @@
         }
     },
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "require": {
-        "google/cloud-tasks": "^1.8"        
+        "google/cloud-tasks": "^1.8"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0|^10.0",
+        "phpunit/phpunit": "^10.5|^11.0"
+    },
+    "scripts": {
+        "test": "phpunit"
     }
 }
