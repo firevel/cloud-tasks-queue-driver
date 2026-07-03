@@ -105,9 +105,15 @@ Unlike traditional queue drivers, there is no `queue:work` process. Cloud Tasks 
 2. Cloud Tasks sends the payload via HTTP POST to the handler route (`/_cloudtasks` by default), which the package registers automatically.
 3. The handler verifies the signature, rejects unauthenticated requests with a 403, and processes valid jobs through Laravel's queue worker.
 
-Retries are managed by the Cloud Tasks queue configuration; the job's attempt count is read from the `X-AppEngine-TaskRetryCount` header.
-
 > **Note:** Since job payloads are signed with `APP_KEY`, rotating the key will invalidate tasks that were queued before the rotation.
+
+## Retries, Attempts and Overlapping
+
+- **Retries** are managed by the Cloud Tasks queue configuration (`maxAttempts`, backoff, etc.). A failed job returns a 500 response and Cloud Tasks redelivers it according to the queue's retry policy.
+- **Per-job attempts** are supported: when a job defines `$tries`, it is marked as failed once the limit is reached and the handler responds with a 200 so Cloud Tasks stops redelivering it. `$job->attempts()` is 1-based (1 on the first attempt), derived from the `X-CloudTasks-TaskRetryCount` / `X-AppEngine-TaskRetryCount` headers.
+- **Releasing** (`$this->release($delay)`) creates a fresh Cloud Task with the same payload, since Cloud Tasks has no native release. The attempt count is carried over in the payload. This also makes the [`WithoutOverlapping`](https://laravel.com/docs/queues#preventing-job-overlaps) job middleware work as expected — overlapping jobs are pushed back instead of lost. It requires a cache store that supports atomic locks.
+- **Unique jobs** (`ShouldBeUnique`) work out of the box; the unique lock is handled by Laravel at dispatch time and also requires a lock-capable cache store.
+- To process an entire queue serially (one task at a time), set `maxConcurrentDispatches=1` on the Cloud Tasks queue — no application code needed.
 
 ## Routing Behavior
 

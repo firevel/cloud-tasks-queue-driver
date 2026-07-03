@@ -95,7 +95,11 @@ class CloudTasksQueue extends LaravelQueue implements QueueContract
      */
     public function pushRaw($payload, $queue = null, array $options = [])
     {
-        return $this->getTasksService()->pushTaskToQueue($queue, $payload);
+        return $this->getTasksService()->pushTaskToQueue(
+            $this->getQueue($queue),
+            $payload,
+            $options['delay'] ?? 0
+        );
     }
 
     /**
