@@ -33,7 +33,7 @@
         "google/cloud-tasks": "^1.8"
     },
     "require-dev": {
-        "orchestra/testbench": "^9.0|^10.0",
+        "orchestra/testbench": "^9.0|^10.0|^11.0",
         "phpunit/phpunit": "^10.5|^11.0"
     },
     "scripts": {

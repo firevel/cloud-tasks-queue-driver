@@ -70,6 +70,54 @@ class CloudTasksQueue extends LaravelQueue implements QueueContract
     }
 
     /**
+     * Get the number of pending jobs.
+     *
+     * @param  string|null  $queue
+     * @return int
+     */
+    public function pendingSize($queue = null)
+    {
+        // Currently not supported.
+        return 0;
+    }
+
+    /**
+     * Get the number of delayed jobs.
+     *
+     * @param  string|null  $queue
+     * @return int
+     */
+    public function delayedSize($queue = null)
+    {
+        // Currently not supported.
+        return 0;
+    }
+
+    /**
+     * Get the number of reserved jobs.
+     *
+     * @param  string|null  $queue
+     * @return int
+     */
+    public function reservedSize($queue = null)
+    {
+        // Currently not supported.
+        return 0;
+    }
+
+    /**
+     * Get the creation time of the oldest pending job.
+     *
+     * @param  string|null  $queue
+     * @return int|null
+     */
+    public function creationTimeOfOldestPendingJob($queue = null)
+    {
+        // Currently not supported.
+        return null;
+    }
+
+    /**
      * Push a new job onto the queue.
      *
      * @param  string|object  $job
