@@ -61,8 +61,8 @@ CLOUD_TASKS_LOCATION=us-central1
 | `location` | Cloud Tasks queue location (must match your compute region) |
 | `queue_name` | Default queue name |
 | `route` | HTTP endpoint path for task callbacks |
-| `tries` | Attempts a job gets when it does not define `$tries` (default `3`) |
-| `backoff` | Seconds before a job that threw is attempted again, when it does not define `$backoff` (default `60`) |
+| `tries` | Attempts a job gets when it does not define `$tries` (default `3`; `0` means unlimited) |
+| `backoff` | Seconds before a job that threw is attempted again, when it does not define `$backoff` (default `60`). May be a list per attempt, e.g. `[30, 120, 600]` or `'30,120,600'` |
 | `service` | App Engine service name (falls back to the `GAE_SERVICE` env variable when not set) |
 | `version` | App Engine version to route tasks to (when not set, tasks go to the service's default version) |
 | `url` | Custom URL for Cloud Run or when behind a proxy/load balancer |
@@ -120,6 +120,8 @@ Laravel owns the retries of a job that throws, exactly like under `queue:work`; 
 - **Attempts are capped** by the job's `$tries` (or `retryUntil()`), falling back to the connection's `tries` (default 3). A job on its last attempt is marked as failed, dispatched as `JobFailed`, stored with the configured failed job provider (`queue.failed`, e.g. the `failed_jobs` table) and answered with 200. `$job->attempts()` is 1-based (1 on the first attempt).
 - **Cloud Tasks retries only what Laravel could not handle**: when creating the released task fails, or the process dies (timeout, out of memory), the request ends with an error status and the queue's retry policy (`maxAttempts`, backoff) redelivers the original task. Keep that policy finite.
 - **Releasing** (`$this->release($delay)`) uses the same mechanism. This also makes the [`WithoutOverlapping`](https://laravel.com/docs/queues#preventing-job-overlaps) job middleware work as expected — overlapping jobs are pushed back instead of lost. It requires a cache store that supports atomic locks.
+- **Every release counts as an attempt**, whether it comes from an exception, `$this->release()` or a middleware such as `WithoutOverlapping` or `RateLimited`. With the default of 3 tries, a job pushed back three times is failed with `MaxAttemptsExceededException`. Jobs that are expected to be pushed back often should set a higher `$tries`, or use `retryUntil()` to limit by time instead.
+- **`tries` of `0` means unlimited**, on the connection or on a job. A job that always throws is then retried every `backoff` seconds forever and never reaches the failed job provider, so prefer a finite value.
 - **Unique jobs** (`ShouldBeUnique`) work out of the box; the unique lock is handled by Laravel at dispatch time and also requires a lock-capable cache store.
 - To process an entire queue serially (one task at a time), set `maxConcurrentDispatches=1` on the Cloud Tasks queue — no application code needed.
 

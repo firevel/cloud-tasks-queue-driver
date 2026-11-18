@@ -9,6 +9,7 @@ use Firevel\CloudTasksQueueDriver\Tests\Fixtures\OverlappingJob;
 use Firevel\CloudTasksQueueDriver\Tests\Fixtures\ReleasingJob;
 use Firevel\CloudTasksQueueDriver\Tests\TestCase;
 use Google\Cloud\Tasks\V2\CloudTasksClient;
+use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Failed\FailedJobProviderInterface;
 use Illuminate\Support\Facades\Cache;
@@ -146,7 +147,49 @@ class RetryBehaviorTest extends TestCase
         $this->mockClient(1, $capturedTask);
         $payload = $this->jobPayload(new FailingJob);
         $this->postTask($payload, SignatureService::sign($payload))->assertJson(['status' => 'released']);
-        $this->assertEqualsWithDelta(time() + 5, $capturedTask->getScheduleTime()->getSeconds(), 5);
+        $this->assertEqualsWithDelta(time() + 5, $capturedTask->getScheduleTime()->getSeconds(), 2);
+    }
+
+    public function test_connection_backoff_may_be_a_list_per_attempt()
+    {
+        config()->set('queue.connections.cloudtasks.backoff', [30, 120]);
+        Event::fake([JobFailed::class]);
+
+        $this->mockClient(1, $capturedTask);
+        $payload = $this->jobPayload(new FailingJob);
+        $this->postTask($payload, SignatureService::sign($payload))->assertJson(['status' => 'released']);
+        $this->assertEqualsWithDelta(time() + 30, $capturedTask->getScheduleTime()->getSeconds(), 2);
+    }
+
+    public function test_connection_backoff_list_is_indexed_by_attempt()
+    {
+        config()->set('queue.connections.cloudtasks.backoff', '30,120');
+        Event::fake([JobFailed::class]);
+
+        $this->mockClient(1, $capturedTask);
+        $payload = $this->releasedJobPayload(new FailingJob, 1);
+        $this->postTask($payload, SignatureService::sign($payload))->assertJson(['status' => 'released']);
+        $this->assertEqualsWithDelta(time() + 120, $capturedTask->getScheduleTime()->getSeconds(), 2);
+    }
+
+    public function test_failed_job_provider_error_is_reported_and_task_still_answered_as_failed()
+    {
+        $failer = Mockery::mock(FailedJobProviderInterface::class);
+        $failer->shouldReceive('log')->once()->andThrow(new RuntimeException('failed_jobs table is missing.'));
+        $this->app->instance('queue.failer', $failer);
+
+        $handler = Mockery::mock(ExceptionHandler::class);
+        $handler->shouldReceive('report')
+            ->once()
+            ->with(Mockery::on(fn ($e) => $e->getMessage() === 'failed_jobs table is missing.'));
+        $this->app->instance(ExceptionHandler::class, $handler);
+        $this->mockClient(0);
+
+        $payload = $this->jobPayload(new FailingJobWithTries);
+
+        $this->postTask($payload, SignatureService::sign($payload), [
+            'X-CloudTasks-QueueName' => 'default',
+        ])->assertOk()->assertJson(['status' => 'failed']);
     }
 
     public function test_failed_job_is_logged_to_the_failed_job_provider()
