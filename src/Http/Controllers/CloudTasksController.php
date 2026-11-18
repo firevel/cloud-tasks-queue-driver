@@ -97,7 +97,9 @@ class CloudTasksController extends Controller
      * Worker options for the connection.
      *
      * `tries` and `backoff` on the connection config are the defaults for
-     * jobs that do not define `$tries` / `$backoff` themselves.
+     * jobs that do not define `$tries` / `$backoff` themselves. Like a job's
+     * `$backoff`, the connection's may be a list of seconds per attempt, as
+     * an array or a comma-separated string.
      *
      * @param  string  $connection
      * @return WorkerOptions
@@ -105,9 +107,10 @@ class CloudTasksController extends Controller
     protected function getWorkerOptions($connection)
     {
         $config = config("queue.connections.{$connection}", []);
+        $backoff = $config['backoff'] ?? static::DEFAULT_BACKOFF;
 
         return new WorkerOptions(
-            backoff: (int) ($config['backoff'] ?? static::DEFAULT_BACKOFF),
+            backoff: is_array($backoff) ? implode(',', $backoff) : $backoff,
             maxTries: (int) ($config['tries'] ?? static::DEFAULT_TRIES),
         );
     }
