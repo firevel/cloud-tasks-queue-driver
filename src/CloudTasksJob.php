@@ -150,20 +150,23 @@ class CloudTasksJob extends Job implements JobContract
      * Release the job back onto the queue after (n) seconds.
      *
      * Cloud Tasks has no native release; a new task is created with the same
-     * payload and the attempts made so far stamped into it.
+     * payload and the attempts made so far stamped into it. The job is marked
+     * released only once that task exists: if creating it fails, the handler
+     * answers with an error and Cloud Tasks redelivers the original task, so
+     * the job is never lost.
      *
      * @param  int  $delay
      * @return void
      */
     public function release($delay = 0)
     {
-        parent::release($delay);
-
         $payload = $this->job;
         $payload['attempts'] = $this->attempts();
 
         $this->container->make('queue')
             ->connection($this->getConnectionName())
             ->pushRaw(json_encode($payload), $this->getQueue(), ['delay' => $delay]);
+
+        parent::release($delay);
     }
 }
