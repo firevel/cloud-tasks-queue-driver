@@ -55,8 +55,9 @@ class CloudTasksServiceProvider extends ServiceProvider
 
     /**
      * Store jobs that exhausted their attempts with the failed job provider,
-     * like `queue:work` does for its own jobs. Skipped when no provider is
-     * configured.
+     * like `queue:work` does for its own jobs. A provider that cannot store
+     * the job (missing table, database down) is reported rather than thrown,
+     * so the task is still answered as failed instead of being redelivered.
      *
      * @return void
      */
@@ -74,8 +75,8 @@ class CloudTasksServiceProvider extends ServiceProvider
                     $event->job->getRawBody(),
                     $event->exception
                 );
-            } catch (Throwable) {
-                // No failed job provider configured.
+            } catch (Throwable $e) {
+                report($e);
             }
         });
     }
